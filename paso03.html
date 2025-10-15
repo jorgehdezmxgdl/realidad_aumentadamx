@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RA</title>
+    <title>RA Progresivo - Simple a Complejo</title>
     <style>
         * {
             margin: 0;
@@ -13,6 +13,7 @@
         
         body {
             background: #1a1a2e;
+            color: #eee;
             font-family: 'Courier New', monospace;
             padding: 20px;
             overflow-y: auto;
@@ -151,7 +152,7 @@
 </head>
 <body>
     <div class="container">
-        <h1> Realidad Aumentada - De Simple a Complejo</h1>
+        <h1>🌌 Realidad Aumentada - De Simple a Complejo</h1>
         
         <!-- NIVEL 1 -->
         <div class="level-section">
@@ -159,18 +160,20 @@
                 <span class="step-number">1</span>NIVEL SIMPLE: Canvas Básico (Sin Cámara)
             </div>
             
+            
             <button class="demo-button" onclick="demoNivel1()">▶ Ver Demo Nivel 1</button>
             <div class="demo-area">
                 <canvas id="canvas1"></canvas>
             </div>
         </div>
         
+        <!-- NIVEL 2 -->
         <div class="level-section">
             <div class="level-title">
                 <span class="step-number">2</span>NIVEL INTERMEDIO: Canvas + Cámara Básica
             </div>
             
-           
+            
             <button class="demo-button" onclick="demoNivel2()">▶ Ver Demo Nivel 2</button>
             <div class="demo-area" style="display: none;" id="area2">
                 <canvas id="canvas2"></canvas>
@@ -178,6 +181,7 @@
             </div>
         </div>
         
+        <!-- NIVEL 3 -->
         <div class="level-section">
             <div class="level-title">
                 <span class="step-number">3</span>NIVEL COMPLEJO: RA Completa con Holograma Avanzado
@@ -190,8 +194,12 @@
             </div>
         </div>
         
-        
+       
     </div>
+
+    <!-- Videos ocultos para demos -->
+    <video id="video2" style="display: none;"></video>
+    <video id="video3" style="display: none;"></video>
 
     <script>
         // DEMO NIVEL 1
@@ -226,38 +234,85 @@
             draw();
         }
         
-        // DEMO NIVEL 2
+        // DEMO NIVEL 2 - VERSIÓN SIMPLIFICADA
         function demoNivel2() {
             document.getElementById('area2').style.display = 'block';
             
-            const video = document.getElementById('video2');
             const canvas = document.getElementById('canvas2');
             const ctx = canvas.getContext('2d');
             
             async function iniciarCamara() {
                 try {
-                    const stream = await navigator.mediaDevices
-                        .getUserMedia({ video: { facingMode: 'environment' } });
+                    console.log('Iniciando cámara...');
+                    
+                    // Crear elemento video dinámicamente
+                    const video = document.createElement('video');
+                    video.setAttribute('autoplay', true);
+                    video.setAttribute('playsinline', true);
+                    video.setAttribute('muted', true);
+                    
+                    const constraints = {
+                        video: { 
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
+                        },
+                        audio: false
+                    };
+                    
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    console.log('✅ Stream obtenido:', stream.getTracks());
                     
                     video.srcObject = stream;
-                    video.onloadedmetadata = () => {
-                        video.play();
-                        dibujarConCamara();
+                    
+                    // Esperar a que el video esté listo
+                    video.onplaying = () => {
+                        console.log('✅ Video reproduciendo');
+                        dibujarConCamara(video);
                     };
+                    
+                    video.onerror = (e) => {
+                        console.error('❌ Error en video:', e);
+                        alert('Error: ' + e);
+                    };
+                    
+                    // Forzar reproducción
+                    video.play().catch(e => {
+                        console.error('Error al reproducir:', e);
+                    });
+                    
                 } catch (error) {
-                    alert('Error: ' + error.message);
+                    console.error('❌ Error:', error.name, error.message);
+                    
+                    let mensaje = 'Error: ';
+                    if (error.name === 'NotAllowedError') {
+                        mensaje += 'Permiso denegado a la cámara';
+                    } else if (error.name === 'NotFoundError') {
+                        mensaje += 'No hay cámara disponible';
+                    } else if (error.name === 'SecurityError') {
+                        mensaje += 'Error de seguridad - probablemente modo incógnito';
+                    } else {
+                        mensaje += error.message;
+                    }
+                    
+                    alert(mensaje);
+                    console.log('Abre la consola (F12) para ver más detalles');
                 }
             }
             
-            function dibujarConCamara() {
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
-                ctx.beginPath();
-                ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
-                ctx.fill();
-                
-                requestAnimationFrame(dibujarConCamara);
+            function dibujarConCamara(video) {
+                try {
+                    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
+                        ctx.beginPath();
+                        ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    requestAnimationFrame(() => dibujarConCamara(video));
+                } catch (e) {
+                    console.error('Error al dibujar:', e);
+                }
             }
             
             iniciarCamara();
