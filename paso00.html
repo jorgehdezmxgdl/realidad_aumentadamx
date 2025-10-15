@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>AR Holograma con Canvas</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg:#0b0f14;
+      --panel:#111927cc;
+      --text:#e6f0ff;
+      --muted:#9fb3c8;
+      --accent:#00e5ff;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      overflow: hidden;
+    }
+    /* Canvas a pantalla completa */
+    #canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      background: #000; /* fondo negro mientras inicia la cámara */
+    }
+
+    /* El video no se muestra; solo sirve de fuente para el canvas */
+    #video { display: none; }
+
+    /* Barra superior de estado */
+    .statusbar {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      padding: 10px 14px;
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      border: 1px solid #1f2a37;
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      z-index: 10;
+    }
+
+    /* Controles flotantes */
+    .controls {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px;
+      background: var(--panel);
+      border: 1px solid #1f2a37;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+    .controls button {
+      padding: 10px 14px;
+      border: 1px solid #1f2a37;
+      background: #0f172acc;
+      color: var(--text);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+    .controls button:hover { background: #111d38cc; }
+    .controls .primary { border-color:#0ea5e9; box-shadow: 0 0 0 1px #0ea5e955 inset; }
+
+    /* Prompt de permisos */
+    #permissionPrompt {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: #00000066;
+      backdrop-filter: blur(3px);
+      z-index: 20;
+    }
+    #permissionPrompt.hidden { display: none; }
+    .prompt-card {
+      width: min(92vw, 520px);
+      background: #0b1220;
+      border: 1px solid #1f2a37;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      color: var(--text);
+      box-shadow: 0 10px 40px #0008;
+    }
+    .prompt-card h2 { margin: 8px 0 6px; }
+    .prompt-card p { margin: 6px 0; color: var(--muted); }
+    .prompt-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .link {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas (salida) y video (fuente) -->
+  <canvas id="canvas"></canvas>
+  <video id="video" playsinline></video>
+
+  <!-- Estado -->
+  <div class="statusbar" id="status">📷 Listo para iniciar la cámara</div>
+
+  <!-- Controles -->
+  <div class="controls" aria-label="Controles de AR">
+    <button id="btnStart" class="primary">🎥 Iniciar cámara</button>
+    <button id="btnAnim">⏸ Pausar</button>
+    <button id="btnMode">🔄 Cristal</button>
+    <button id="btnColor">🎨 Color</button>
+  </div>
+
+  <!-- Prompt de permisos / ayuda -->
+  <div id="permissionPrompt" class="hidden" aria-live="polite">
+    <div class="prompt-card">
+      <h2>Permiso de cámara requerido</h2>
+      <p>Presiona <strong>“Iniciar cámara”</strong> y permite el acceso.</p>
+      <p>Si no ves el diálogo, asegúrate de abrir en <strong>HTTPS</strong> o en modo normal (no incógnito).</p>
+      <div class="prompt-actions">
+        <button id="btnPromptStart" class="primary">🎥 Iniciar cámara</button>
+        <a class="link" href="https://developer.mozilla.org/es/docs/Web/API/MediaDevices/getUserMedia" target="_blank" rel="noreferrer">Ayuda</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== Referencias DOM ======
+    const video     = document.getElementById('video');
+    const canvas    = document.getElementById('canvas');
+    const ctx       = canvas.getContext('2d');
+    const statusEl  = document.getElementById('status');
+    const btnStart  = document.getElementById('btnStart');
+    const btnAnim   = document.getElementById('btnAnim');
+    const btnMode   = document.getElementById('btnMode');
+    const btnColor  = document.getElementById('btnColor');
+    const promptEl  = document.getElementById('permissionPrompt');
+    const btnPromptStart = document.getElementById('btnPromptStart');
+
+    // Tamaño inicial
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // ====== Estado ======
+    let stream = null;
+    let animationActive = true;
+    let colorMode = 0; // índice en 'colors'
+    let mode = 0;      // 0: Cristal, 1: Anillos, 2: Esfera
+    let time = 0;
+
+    const colors = [
+      { r: 0, g: 255, b: 255 },   // Cyan
+      { r: 255, g: 0, b: 255 },   // Magenta
+      { r: 0, g: 255, b: 0 },     // Verde
+      { r: 255, g: 255, b: 0 }    // Amarillo
+    ];
+
+    // ====== Cámara ======
+    async function startCamera() {
+      try {
+        promptEl.classList.remove('hidden'); // muestra guía breve
+
+        // Intento de obtener la cámara (trasera si existe)
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+          audio: false
+        });
+
+        // Vincular al <video>
+        video.srcObject = stream;
+        await video.play().catch(() => {/* algunos navegadores requieren user gesture explícita */});
+
+        promptEl.classList.add('hidden');
+        statusEl.textContent = '✅ Cámara activa - Apunta a una superficie';
+
+        // Arranca animación si aún no corre
+        if (!isAnimating) {
+          isAnimating = true;
+          requestAnimationFrame(animateAR);
+        }
+      } catch (error) {
+        console.error('Error de cámara:', error);
+        statusEl.textContent = '❌ Error: revisa permisos/HTTPS o modo incógnito';
+        // Muestra detalles de ayuda
+        promptEl.classList.remove('hidden');
+        promptEl.querySelector('.prompt-card').innerHTML = `
+          <h2>❌ Permisos / Acceso denegado</h2>
+          <p>Parece que estás en modo incógnito, sin HTTPS o rechazaste el permiso.</p>
+          <p>Prueba lo siguiente:</p>
+          <p>• Abre en <strong>HTTPS</strong> o servidor local<br>
+             • Recarga la página y concede acceso a la cámara<br>
+             • Sal del modo incógnito</p>
+          <div class="prompt-actions">
+            <button id="btnPromptStart2" class="primary">🔁 Reintentar</button>
+          </div>
+        `;
+        // Reengancha el botón de reintento
+        const retry = document.getElementById('btnPromptStart2');
+        if (retry) retry.addEventListener('click', startCamera, { once: true });
+      }
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+      statusEl.textContent = '⏹ Cámara detenida';
+    }
+
+    // ====== Dibujo del holograma ======
+    function drawHologram(x, y, size, rotation) {
+      const color = colors[colorMode];
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+
+      if (mode === 0) {
+        // Cristal (rombo)
+        ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        ctx.fillStyle   = `rgba(${color.r}, ${color.g}, ${color.b}, 0.3)`;
+        ctx.lineWidth = 3;
+        const points = [[0,-size],[size,0],[0,size],[-size,0]];
+        ctx.beginPath();
+        ctx.moveTo(points[0][0], points[0][1]);
+        for (let i = 1; i < points.length; i++) ctx.lineTo(points[i][0], points[i][1]);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+
+      } else if (mode === 1) {
+        // Anillos concéntricos
+        ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        ctx.lineWidth = 2;
+        for (let i = 1; i <= 3; i++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, size * i * 0.3, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+      } else {
+        // Esfera
+        ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.5)`;
+        ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        ctx.lineWidth = 2; ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    // ====== Efecto de aura/energía ======
+    function drawHoloEffect(x, y, size) {
+      const color = colors[colorMode];
+      const pulse = Math.sin(time * 0.05) * 0.5 + 0.5;
+
+      // Aura pulsante
+      ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${0.2 * pulse})`;
+      ctx.beginPath();
+      ctx.arc(x, y, size * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Líneas de energía
+      ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.4)`;
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2 + time * 0.02;
+        const x1 = x + Math.cos(angle) * size;
+        const y1 = y + Math.sin(angle) * size;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+      }
+    }
+
+    // ====== Animación ======
+    let isAnimating = false;
+    function animateAR() {
+      // Recalcular por si cambió el viewport
+      // (Opcional; también respondemos al evento resize)
+      // canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+      // Pintar frame de video
+      if (video.readyState >= 2) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      } else {
+        // Relleno mientras el video está cargando
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      // Overlay tenue para contraste
+      ctx.fillStyle = 'rgba(0,0,0,0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Centro y tamaño “respirando”
+      const holoX = canvas.width / 2;
+      const holoY = canvas.height / 2;
+      const holoSize = 80 + Math.sin(time * 0.02) * 20;
+
+      if (animationActive) time++;
+
+      // Efectos + figura
+      drawHoloEffect(holoX, holoY, holoSize);
+      const rotation = time * 0.03;
+      drawHologram(holoX, holoY, holoSize, rotation);
+
+      // Guías de referencia
+      ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([10, 10]);
+      ctx.beginPath(); ctx.moveTo(holoX - 200, holoY); ctx.lineTo(holoX + 200, holoY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(holoX, holoY - 200); ctx.lineTo(holoX, holoY + 200); ctx.stroke();
+      ctx.setLineDash([]);
+
+      requestAnimationFrame(animateAR);
+    }
+
+    // ====== Controles ======
+    function changeColor() {
+      colorMode = (colorMode + 1) % colors.length;
+    }
+    function toggleAnimation() {
+      animationActive = !animationActive;
+      btnAnim.textContent = animationActive ? '⏸ Pausar' : '▶ Reanudar';
+    }
+    function toggleMode() {
+      mode = (mode + 1) % 3;
+      const modes = ['Cristal', 'Anillos', 'Esfera'];
+      btnMode.textContent = '🔄 ' + modes[mode];
+    }
+
+    // Eventos de botones
+    btnStart.addEventListener('click', startCamera);
+    btnPromptStart.addEventListener('click', startCamera);
+    btnAnim.addEventListener('click', toggleAnimation);
+    btnMode.addEventListener('click', toggleMode);
+    btnColor.addEventListener('click', changeColor);
+
+    // Responsivo
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Liberar cámara al cerrar/navegar
+    window.addEventListener('beforeunload', stopCamera);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // Pausa animación ligera (opcional)
+        // animationActive = false;
+      }
+    });
+
+
+    // promptEl.classList.remove('hidden');
+  </script>
+</body>
+</html>
