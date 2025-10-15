@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #1a1a2e;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #00ffff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        
+        .level-section {
+            margin-bottom: 40px;
+            background: #16213e;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+        }
+        
+        .level-title {
+            color: #00ff00;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00ff00;
+        }
+        
+        .code-section {
+            background: #0f3460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .code-section h3 {
+            color: #00ffff;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        pre {
+            color: #00ff00;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+        
+        .explanation {
+            background: #1a1a3e;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #ff00ff;
+            border-radius: 3px;
+            line-height: 1.8;
+        }
+        
+        .explanation strong {
+            color: #ffff00;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, #00ffff, #00ccff);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #000;
+            margin: 15px 0;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .demo-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+        
+        .demo-area {
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            min-height: 200px;
+            border: 2px solid #00ff00;
+        }
+        
+        canvas {
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            max-width: 100%;
+            background: #000;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #00ffff;
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+        
+        .comparison-table td, .comparison-table th {
+            padding: 10px;
+            border: 1px solid #00ffff;
+        }
+        
+        .comparison-table th {
+            background: #0f3460;
+            color: #00ffff;
+            font-weight: bold;
+        }
+        
+        .comparison-table td {
+            background: #1a1a3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Realidad Aumentada - De Simple a Complejo</h1>
+        
+        <!-- NIVEL 1 -->
+        <div class="level-section">
+            <div class="level-title">
+                <span class="step-number">1</span>NIVEL SIMPLE: Canvas Básico (Sin Cámara)
+            </div>
+            
+            <button class="demo-button" onclick="demoNivel1()">▶ Ver Demo Nivel 1</button>
+            <div class="demo-area">
+                <canvas id="canvas1"></canvas>
+            </div>
+        </div>
+        
+        <div class="level-section">
+            <div class="level-title">
+                <span class="step-number">2</span>NIVEL INTERMEDIO: Canvas + Cámara Básica
+            </div>
+            
+           
+            <button class="demo-button" onclick="demoNivel2()">▶ Ver Demo Nivel 2</button>
+            <div class="demo-area" style="display: none;" id="area2">
+                <canvas id="canvas2"></canvas>
+                <p style="color: #ffff00; margin-top: 10px;">⚠️ Haz clic en el botón de permiso que aparecerá</p>
+            </div>
+        </div>
+        
+        <div class="level-section">
+            <div class="level-title">
+                <span class="step-number">3</span>NIVEL COMPLEJO: RA Completa con Holograma Avanzado
+            </div>
+            
+            <button class="demo-button" onclick="demoNivel3()">▶ Ver Demo Nivel 3</button>
+            <div class="demo-area" style="display: none;" id="area3">
+                <canvas id="canvas3"></canvas>
+                <p style="color: #ffff00; margin-top: 10px;">⚠️ Haz clic en el botón de permiso que aparecerá</p>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <script>
+        // DEMO NIVEL 1
+        function demoNivel1() {
+            const canvas = document.getElementById('canvas1');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 400;
+            canvas.height = 300;
+            
+            let time = 0;
+            
+            function draw() {
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.save();
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(time * 0.05);
+                
+                ctx.fillStyle = 'cyan';
+                ctx.fillRect(-30, -30, 60, 60);
+                
+                ctx.restore();
+                
+                time++;
+                
+                if (time < 300) {
+                    requestAnimationFrame(draw);
+                }
+            }
+            
+            draw();
+        }
+        
+        // DEMO NIVEL 2
+        function demoNivel2() {
+            document.getElementById('area2').style.display = 'block';
+            
+            const video = document.getElementById('video2');
+            const canvas = document.getElementById('canvas2');
+            const ctx = canvas.getContext('2d');
+            
+            async function iniciarCamara() {
+                try {
+                    const stream = await navigator.mediaDevices
+                        .getUserMedia({ video: { facingMode: 'environment' } });
+                    
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        dibujarConCamara();
+                    };
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            }
+            
+            function dibujarConCamara() {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = 'rgba(0, 255, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
+                ctx.fill();
+                
+                requestAnimationFrame(dibujarConCamara);
+            }
+            
+            iniciarCamara();
+        }
+        
+        // DEMO NIVEL 3
+        function demoNivel3() {
+            document.getElementById('area3').style.display = 'block';
+            
+            class SistemaRA {
+                constructor(canvasId, videoId) {
+                    this.canvas = document.getElementById(canvasId);
+                    this.video = document.getElementById(videoId);
+                    this.ctx = this.canvas.getContext('2d');
+                    
+                    this.canvas.width = 400;
+                    this.canvas.height = 300;
+                    
+                    this.time = 0;
+                    this.animacionActiva = true;
+                }
+                
+                async iniciar() {
+                    try {
+                        const stream = await navigator.mediaDevices
+                            .getUserMedia({ video: { facingMode: 'environment' } });
+                        this.video.srcObject = stream;
+                        this.video.onloadedmetadata = () => {
+                            this.video.play();
+                            this.loop();
+                        };
+                    } catch (e) {
+                        alert('Error: ' + e.message);
+                    }
+                }
+                
+                loop = () => {
+                    this.ctx.drawImage(this.video, 0, 0, 
+                        this.canvas.width, this.canvas.height);
+                    
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                    
+                    this.dibujarHolograma();
+                    this.dibujarUI();
+                    
+                    if (this.animacionActiva) this.time++;
+                    
+                    requestAnimationFrame(this.loop);
+                }
+                
+                dibujarHolograma() {
+                    const x = this.canvas.width / 2;
+                    const y = this.canvas.height / 2;
+                    const size = 50;
+                    
+                    const pulse = Math.sin(this.time * 0.05) * 0.5 + 0.5;
+                    this.ctx.fillStyle = `rgba(0, 255, 255, ${0.2 * pulse})`;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, size * 1.5, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    
+                    this.ctx.strokeStyle = 'rgb(0, 255, 255)';
+                    this.ctx.lineWidth = 2;
+                    for (let i = 1; i <= 3; i++) {
+                        const radius = size * i * 0.3;
+                        const rotation = this.time * 0.01 * i;
+                        
+                        this.ctx.save();
+                        this.ctx.translate(x, y);
+                        this.ctx.rotate(rotation);
+                        this.ctx.beginPath();
+                        this.ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                        this.ctx.stroke();
+                        this.ctx.restore();
+                    }
+                    
+                    this.ctx.save();
+                    this.ctx.translate(x, y);
+                    this.ctx.rotate(this.time * 0.03);
+                    
+                    this.ctx.fillStyle = 'rgba(0, 255, 255, 0.8)';
+                    this.ctx.beginPath();
+                    const puntos = [[0, -size], [size, 0], [0, size], [-size, 0]];
+                    this.ctx.moveTo(puntos[0][0], puntos[0][1]);
+                    puntos.forEach(p => this.ctx.lineTo(p[0], p[1]));
+                    this.ctx.closePath();
+                    this.ctx.fill();
+                    
+                    this.ctx.restore();
+                }
+                
+                dibujarUI() {
+                    this.ctx.fillStyle = 'rgba(0, 255, 255, 0.3)';
+                    this.ctx.setLineDash([5, 5]);
+                    this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.3)';
+                    this.ctx.lineWidth = 1;
+                    
+                    const centerX = this.canvas.width / 2;
+                    const centerY = this.canvas.height / 2;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(centerX - 80, centerY);
+                    this.ctx.lineTo(centerX + 80, centerY);
+                    this.ctx.stroke();
+                    
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(centerX, centerY - 80);
+                    this.ctx.lineTo(centerX, centerY + 80);
+                    this.ctx.stroke();
+                    
+                    this.ctx.setLineDash([]);
+                }
+            }
+            
+            const ra = new SistemaRA('canvas3', 'video3');
+            ra.iniciar();
+        }
+    </script>
+</body>
+</html>
