@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catálogo de 100 productos (dl/dt/dd)</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --fg: #222;
+      --muted: #666;
+      --card: #fff;
+      --border: #e5e5e5;
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg); color: var(--fg);
+      line-height: 1.45;
+    }
+    header { padding: 2rem 1rem; text-align: center; }
+    header h1 { margin: 0 0 .25rem; font-size: clamp(1.4rem, 2.5vw, 2rem); }
+    header p { margin: 0; color: var(--muted); }
+
+    .wrap { max-width: 960px; margin: 0 auto; padding: 1rem; }
+
+    /* Definition list layout */
+    dl.catalogo {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: .25rem 1rem; 
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    /* Two-column on wider screens */
+    @media (min-width: 720px) {
+      dl.catalogo { grid-template-columns: 1fr 2fr; }
+    }
+
+    dt {
+      font-weight: 700;
+      padding: .65rem .75rem;
+      background: #f3f6ff;
+      border: 1px solid #e0e7ff;
+      border-radius: 8px;
+    }
+    dd {
+      margin: 0; 
+      padding: .65rem .75rem;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+    }
+    dd small { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Catálogo de 100 productos</h1>
+    <p>Estructura semántica usando <code>&lt;dl&gt;</code>, <code>&lt;dt&gt;</code> y <code>&lt;dd&gt;</code>.</p>
+  </header>
+
+  <main class="wrap">
+    <dl class="catalogo">
+      
+      <dt>Producto 001</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 1. <small>SKU: P001 · Precio: $100.00</small></dd>
+      
+      <dt>Producto 002</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 2. <small>SKU: P002 · Precio: $101.00</small></dd>
+      
+      <dt>Producto 003</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 3. <small>SKU: P003 · Precio: $102.00</small></dd>
+      
+      <dt>Producto 004</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 4. <small>SKU: P004 · Precio: $103.00</small></dd>
+      
+      <dt>Producto 005</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 5. <small>SKU: P005 · Precio: $104.00</small></dd>
+      
+      <dt>Producto 006</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 6. <small>SKU: P006 · Precio: $105.00</small></dd>
+      
+      <dt>Producto 007</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 7. <small>SKU: P007 · Precio: $106.00</small></dd>
+      
+      <dt>Producto 008</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 8. <small>SKU: P008 · Precio: $107.00</small></dd>
+      
+      <dt>Producto 009</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 9. <small>SKU: P009 · Precio: $108.00</small></dd>
+      
+      <dt>Producto 010</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 10. <small>SKU: P010 · Precio: $109.00</small></dd>
+      
+      <dt>Producto 011</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 11. <small>SKU: P011 · Precio: $110.00</small></dd>
+      
+      <dt>Producto 012</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 12. <small>SKU: P012 · Precio: $111.00</small></dd>
+      
+      <dt>Producto 013</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 13. <small>SKU: P013 · Precio: $112.00</small></dd>
+      
+      <dt>Producto 014</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 14. <small>SKU: P014 · Precio: $113.00</small></dd>
+      
+      <dt>Producto 015</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 15. <small>SKU: P015 · Precio: $114.00</small></dd>
+      
+      <dt>Producto 016</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 16. <small>SKU: P016 · Precio: $115.00</small></dd>
+      
+      <dt>Producto 017</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 17. <small>SKU: P017 · Precio: $116.00</small></dd>
+      
+      <dt>Producto 018</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 18. <small>SKU: P018 · Precio: $117.00</small></dd>
+      
+      <dt>Producto 019</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 19. <small>SKU: P019 · Precio: $118.00</small></dd>
+      
+      <dt>Producto 020</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 20. <small>SKU: P020 · Precio: $119.00</small></dd>
+      
+      <dt>Producto 021</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 21. <small>SKU: P021 · Precio: $120.00</small></dd>
+      
+      <dt>Producto 022</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 22. <small>SKU: P022 · Precio: $121.00</small></dd>
+      
+      <dt>Producto 023</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 23. <small>SKU: P023 · Precio: $122.00</small></dd>
+      
+      <dt>Producto 024</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 24. <small>SKU: P024 · Precio: $123.00</small></dd>
+      
+      <dt>Producto 025</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 25. <small>SKU: P025 · Precio: $124.00</small></dd>
+      
+      <dt>Producto 026</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 26. <small>SKU: P026 · Precio: $125.00</small></dd>
+      
+      <dt>Producto 027</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 27. <small>SKU: P027 · Precio: $126.00</small></dd>
+      
+      <dt>Producto 028</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 28. <small>SKU: P028 · Precio: $127.00</small></dd>
+      
+      <dt>Producto 029</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 29. <small>SKU: P029 · Precio: $128.00</small></dd>
+      
+      <dt>Producto 030</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 30. <small>SKU: P030 · Precio: $129.00</small></dd>
+      
+      <dt>Producto 031</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 31. <small>SKU: P031 · Precio: $130.00</small></dd>
+      
+      <dt>Producto 032</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 32. <small>SKU: P032 · Precio: $131.00</small></dd>
+      
+      <dt>Producto 033</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 33. <small>SKU: P033 · Precio: $132.00</small></dd>
+      
+      <dt>Producto 034</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 34. <small>SKU: P034 · Precio: $133.00</small></dd>
+      
+      <dt>Producto 035</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 35. <small>SKU: P035 · Precio: $134.00</small></dd>
+      
+      <dt>Producto 036</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 36. <small>SKU: P036 · Precio: $135.00</small></dd>
+      
+      <dt>Producto 037</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 37. <small>SKU: P037 · Precio: $136.00</small></dd>
+      
+      <dt>Producto 038</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 38. <small>SKU: P038 · Precio: $137.00</small></dd>
+      
+      <dt>Producto 039</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 39. <small>SKU: P039 · Precio: $138.00</small></dd>
+      
+      <dt>Producto 040</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 40. <small>SKU: P040 · Precio: $139.00</small></dd>
+      
+      <dt>Producto 041</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 41. <small>SKU: P041 · Precio: $140.00</small></dd>
+      
+      <dt>Producto 042</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 42. <small>SKU: P042 · Precio: $141.00</small></dd>
+      
+      <dt>Producto 043</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 43. <small>SKU: P043 · Precio: $142.00</small></dd>
+      
+      <dt>Producto 044</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 44. <small>SKU: P044 · Precio: $143.00</small></dd>
+      
+      <dt>Producto 045</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 45. <small>SKU: P045 · Precio: $144.00</small></dd>
+      
+      <dt>Producto 046</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 46. <small>SKU: P046 · Precio: $145.00</small></dd>
+      
+      <dt>Producto 047</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 47. <small>SKU: P047 · Precio: $146.00</small></dd>
+      
+      <dt>Producto 048</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 48. <small>SKU: P048 · Precio: $147.00</small></dd>
+      
+      <dt>Producto 049</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 49. <small>SKU: P049 · Precio: $148.00</small></dd>
+      
+      <dt>Producto 050</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 50. <small>SKU: P050 · Precio: $149.00</small></dd>
+      
+      <dt>Producto 051</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 51. <small>SKU: P051 · Precio: $150.00</small></dd>
+      
+      <dt>Producto 052</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 52. <small>SKU: P052 · Precio: $151.00</small></dd>
+      
+      <dt>Producto 053</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 53. <small>SKU: P053 · Precio: $152.00</small></dd>
+      
+      <dt>Producto 054</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 54. <small>SKU: P054 · Precio: $153.00</small></dd>
+      
+      <dt>Producto 055</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 55. <small>SKU: P055 · Precio: $154.00</small></dd>
+      
+      <dt>Producto 056</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 56. <small>SKU: P056 · Precio: $155.00</small></dd>
+      
+      <dt>Producto 057</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 57. <small>SKU: P057 · Precio: $156.00</small></dd>
+      
+      <dt>Producto 058</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 58. <small>SKU: P058 · Precio: $157.00</small></dd>
+      
+      <dt>Producto 059</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 59. <small>SKU: P059 · Precio: $158.00</small></dd>
+      
+      <dt>Producto 060</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 60. <small>SKU: P060 · Precio: $159.00</small></dd>
+      
+      <dt>Producto 061</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 61. <small>SKU: P061 · Precio: $160.00</small></dd>
+      
+      <dt>Producto 062</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 62. <small>SKU: P062 · Precio: $161.00</small></dd>
+      
+      <dt>Producto 063</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 63. <small>SKU: P063 · Precio: $162.00</small></dd>
+      
+      <dt>Producto 064</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 64. <small>SKU: P064 · Precio: $163.00</small></dd>
+      
+      <dt>Producto 065</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 65. <small>SKU: P065 · Precio: $164.00</small></dd>
+      
+      <dt>Producto 066</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 66. <small>SKU: P066 · Precio: $165.00</small></dd>
+      
+      <dt>Producto 067</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 67. <small>SKU: P067 · Precio: $166.00</small></dd>
+      
+      <dt>Producto 068</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 68. <small>SKU: P068 · Precio: $167.00</small></dd>
+      
+      <dt>Producto 069</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 69. <small>SKU: P069 · Precio: $168.00</small></dd>
+      
+      <dt>Producto 070</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 70. <small>SKU: P070 · Precio: $169.00</small></dd>
+      
+      <dt>Producto 071</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 71. <small>SKU: P071 · Precio: $170.00</small></dd>
+      
+      <dt>Producto 072</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 72. <small>SKU: P072 · Precio: $171.00</small></dd>
+      
+      <dt>Producto 073</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 73. <small>SKU: P073 · Precio: $172.00</small></dd>
+      
+      <dt>Producto 074</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 74. <small>SKU: P074 · Precio: $173.00</small></dd>
+      
+      <dt>Producto 075</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 75. <small>SKU: P075 · Precio: $174.00</small></dd>
+      
+      <dt>Producto 076</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 76. <small>SKU: P076 · Precio: $175.00</small></dd>
+      
+      <dt>Producto 077</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 77. <small>SKU: P077 · Precio: $176.00</small></dd>
+      
+      <dt>Producto 078</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 78. <small>SKU: P078 · Precio: $177.00</small></dd>
+      
+      <dt>Producto 079</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 79. <small>SKU: P079 · Precio: $178.00</small></dd>
+      
+      <dt>Producto 080</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 80. <small>SKU: P080 · Precio: $179.00</small></dd>
+      
+      <dt>Producto 081</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 81. <small>SKU: P081 · Precio: $180.00</small></dd>
+      
+      <dt>Producto 082</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 82. <small>SKU: P082 · Precio: $181.00</small></dd>
+      
+      <dt>Producto 083</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 83. <small>SKU: P083 · Precio: $182.00</small></dd>
+      
+      <dt>Producto 084</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 84. <small>SKU: P084 · Precio: $183.00</small></dd>
+      
+      <dt>Producto 085</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 85. <small>SKU: P085 · Precio: $184.00</small></dd>
+      
+      <dt>Producto 086</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 86. <small>SKU: P086 · Precio: $185.00</small></dd>
+      
+      <dt>Producto 087</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 87. <small>SKU: P087 · Precio: $186.00</small></dd>
+      
+      <dt>Producto 088</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 88. <small>SKU: P088 · Precio: $187.00</small></dd>
+      
+      <dt>Producto 089</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 89. <small>SKU: P089 · Precio: $188.00</small></dd>
+      
+      <dt>Producto 090</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 90. <small>SKU: P090 · Precio: $189.00</small></dd>
+      
+      <dt>Producto 091</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 91. <small>SKU: P091 · Precio: $190.00</small></dd>
+      
+      <dt>Producto 092</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 92. <small>SKU: P092 · Precio: $191.00</small></dd>
+      
+      <dt>Producto 093</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 93. <small>SKU: P093 · Precio: $192.00</small></dd>
+      
+      <dt>Producto 094</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 94. <small>SKU: P094 · Precio: $193.00</small></dd>
+      
+      <dt>Producto 095</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 95. <small>SKU: P095 · Precio: $194.00</small></dd>
+      
+      <dt>Producto 096</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 96. <small>SKU: P096 · Precio: $195.00</small></dd>
+      
+      <dt>Producto 097</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 97. <small>SKU: P097 · Precio: $196.00</small></dd>
+      
+      <dt>Producto 098</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 98. <small>SKU: P098 · Precio: $197.00</small></dd>
+      
+      <dt>Producto 099</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 99. <small>SKU: P099 · Precio: $198.00</small></dd>
+      
+      <dt>Producto 100</dt>
+      <dd><strong>Descripción:</strong> Artículo de ejemplo número 100. <small>SKU: P100 · Precio: $199.00</small></dd>
+      
+    </dl>
+  </main>
+</body>
+</html>
